@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>New Year 2027 Countdown</title>
+  <style>
+    :root { --bg: #0b1020; --card: #151c33; --text: #f4f6ff; --muted: #9aa4c7; --accent: #ffc857; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      background: radial-gradient(circle at top, #1d2650 0%, var(--bg) 60%);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 16px; text-align: center;
+    }
+    h1 { font-size: clamp(1.5rem, 4vw, 2.5rem); margin: 0 0 8px; }
+    .sub { color: var(--muted); margin: 0 0 32px; }
+    .grid { display: grid; grid-template-columns: repeat(4, minmax(70px, 1fr)); gap: 12px; width: min(560px, 100%); }
+    .unit { background: var(--card); border-radius: 16px; padding: 20px 8px; box-shadow: 0 8px 24px rgba(0,0,0,.35); }
+    .num { font-size: clamp(2rem, 7vw, 3.5rem); font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+    .label { font-size: .8rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin-top: 6px; }
+    .done { font-size: clamp(1.5rem, 5vw, 2.5rem); color: var(--accent); margin-top: 24px; display: none; }
+    footer { margin-top: 32px; color: var(--muted); font-size: .85rem; }
+    @media (prefers-color-scheme: light) {
+      :root { --bg: #eef2ff; --card: #ffffff; --text: #1b2240; --muted: #5a6488; --accent: #d9822b; }
+      body { background: radial-gradient(circle at top, #ffffff 0%, var(--bg) 70%); }
+    }
+    @media (max-width: 420px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+</head>
+<body>
+  <h1>Counting down to 2027</h1>
+  <p class="sub">Time left until January 1, 2027 at 00:00 (local time)</p>
+
+  <div class="grid" aria-live="polite">
+    <div class="unit"><div class="num" id="days">--</div><div class="label">Days</div></div>
+    <div class="unit"><div class="num" id="hours">--</div><div class="label">Hours</div></div>
+    <div class="unit"><div class="num" id="minutes">--</div><div class="label">Minutes</div></div>
+    <div class="unit"><div class="num" id="seconds">--</div><div class="label">Seconds</div></div>
+  </div>
+
+  <div class="done" id="done">Happy New Year 2027! 🎉</div>
+
+  <footer>SECOPS24 · NY 2027 Countdown</footer>
+
+  <script>
+    (function () {
+      var target = new Date(2027, 0, 1, 0, 0, 0, 0); // Jan 1, 2027 local midnight
+      var els = {
+        days: document.getElementById('days'),
+        hours: document.getElementById('hours'),
+        minutes: document.getElementById('minutes'),
+        seconds: document.getElementById('seconds')
+      };
+      var done = document.getElementById('done');
+
+      function pad(n) { return n < 10 ? '0' + n : String(n); }
+
+      function tick() {
+        var diff = target.getTime() - Date.now();
+        if (diff <= 0) {
+          els.days.textContent = els.hours.textContent = els.minutes.textContent = els.seconds.textContent = '00';
+          done.style.display = 'block';
+          clearInterval(timer);
+          return;
+        }
+        var s = Math.floor(diff / 1000);
+        els.days.textContent = Math.floor(s / 86400);
+        els.hours.textContent = pad(Math.floor((s % 86400) / 3600));
+        els.minutes.textContent = pad(Math.floor((s % 3600) / 60));
+        els.seconds.textContent = pad(s % 60);
+      }
+
+      tick();
+      var timer = setInterval(tick, 1000);
+    })();
+  </script>
+</body>
+</html>
